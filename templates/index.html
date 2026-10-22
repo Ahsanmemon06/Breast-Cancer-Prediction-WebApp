@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Breast Cancer Risk Assessment</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <!-- Top Header & Progress Bar -->
+  <div class="header">
+    <div class="title">Breast Cancer Risk Prediction Portal</div>
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="step-indicator" id="stepIndicator">Step 1 of 5</div>
+  </div>
+
+  <!-- Main Full-Screen Slider Viewport -->
+  <div class="slider-viewport">
+    <form id="predictionForm" action="/predict" method="POST" class="slider-track">
+
+      <!-- STEP 1: Basic Information -->
+      <div class="slide-card">
+        <span class="badge">Section 1</span>
+        <h2>Basic Demographics</h2>
+        <p class="desc">Please enter the general demographic details of the patient.</p>
+        
+        <div class="grid-fields">
+          <div class="field">
+            <label>Age (Years)</label>
+            <input type="number" name="Age" placeholder="e.g. 45" min="1" max="120" required>
+          </div>
+          <div class="field">
+            <label>Biological Gender</label>
+            <select name="Gender" required>
+              <option value="0">Female</option>
+              <option value="1">Male</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Body Mass Index (BMI)</label>
+            <input type="number" step="0.1" name="BMI" placeholder="e.g. 24.5" min="10" max="60" required>
+          </div>
+          <div class="field">
+            <label>Annual Income (USD)</label>
+            <input type="number" name="Annual_Income_USD" placeholder="e.g. 50000" min="0" required>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="btn next-btn" onclick="goToStep(1)">Next Step &rarr;</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Lifestyle Habits -->
+      <div class="slide-card">
+        <span class="badge">Section 2</span>
+        <h2>Lifestyle & Daily Habits</h2>
+        <p class="desc">Information regarding routine physical habits and lifestyle.</p>
+        
+        <div class="grid-fields">
+          <div class="field">
+            <label>Smoking History</label>
+            <select name="Smoking" required>
+              <option value="0">No</option>
+              <option value="1">Yes</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Alcohol Consumption</label>
+            <select name="Alcohol_Consumption" required>
+              <option value="0">No</option>
+              <option value="1">Yes</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Physical Activity Level</label>
+            <select name="Physical_Activity" required>
+              <option value="Moderate">Moderate</option>
+              <option value="High">High</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Exercise Frequency (Days per week)</label>
+            <input type="number" name="Exercise_Days_Per_Week" placeholder="0 to 7" min="0" max="7" required>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="btn prev-btn" onclick="goToStep(0)">&larr; Back</button>
+          <button type="button" class="btn next-btn" onclick="goToStep(2)">Next Step &rarr;</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Medical & Family History -->
+      <div class="slide-card">
+        <span class="badge">Section 3</span>
+        <h2>Medical & Hereditary History</h2>
+        <p class="desc">Known familial predisposition and pre-existing medical conditions.</p>
+        
+        <div class="grid-fields">
+          <div class="field">
+            <label>Family History of Cancer</label>
+            <select name="Family_History" required>
+              <option value="0">No</option>
+              <option value="1">Yes</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Diabetes Mellitus</label>
+            <select name="Diabetes" required>
+              <option value="0">No</option>
+              <option value="1">Yes</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Hormone Replacement Therapy (HRT)</label>
+            <select name="Hormone_Therapy" required>
+              <option value="0">No</option>
+              <option value="1">Yes</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Genetic Mutation Marker (e.g. BRCA)</label>
+            <select name="Genetic_Mutation" required>
+              <option value="0">Negative</option>
+              <option value="1">Positive</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="btn prev-btn" onclick="goToStep(1)">&larr; Back</button>
+          <button type="button" class="btn next-btn" onclick="goToStep(3)">Next Step &rarr;</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Physiological Factors -->
+      <div class="slide-card">
+        <span class="badge">Section 4</span>
+        <h2>Physiological & Health Indicators</h2>
+        <p class="desc">Vitals, reproductive factors, and biological indicators.</p>
+        
+        <div class="grid-fields">
+          <div class="field">
+            <label>Menopause Status</label>
+            <select name="Menopause_Status" required>
+              <option value="0">Pre-Menopausal</option>
+              <option value="1">Post-Menopausal</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Breastfeeding History</label>
+            <select name="Breastfeeding_History" required>
+              <option value="1">Yes</option>
+              <option value="0">No / Not Applicable</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Systolic Blood Pressure (mmHg)</label>
+            <input type="number" name="Blood_Pressure" placeholder="e.g. 120" min="60" max="250" required>
+          </div>
+          <div class="field">
+            <label>Total Cholesterol Level (mg/dL)</label>
+            <input type="number" name="Cholesterol" placeholder="e.g. 190" min="80" max="400" required>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="btn prev-btn" onclick="goToStep(2)">&larr; Back</button>
+          <button type="button" class="btn next-btn" onclick="goToStep(4)">Next Step &rarr;</button>
+        </div>
+      </div>
+
+      <!-- STEP 5: Diagnostics & Final Submission -->
+      <div class="slide-card">
+        <span class="badge">Section 5 (Final)</span>
+        <h2>Clinical Diagnostic Reports</h2>
+        <p class="desc">Clinical screening outcomes and measured tumor dimensions.</p>
+        
+        <div class="grid-fields">
+          <div class="field">
+            <label>Tumor Diameter (cm)</label>
+            <input type="number" step="0.01" name="Tumor_Size_cm" placeholder="e.g. 2.15" min="0" max="25" required>
+          </div>
+          <div class="field">
+            <label>Mammogram Examination Result</label>
+            <select name="Mammogram_Result" required>
+              <option value="Normal">Normal</option>
+              <option value="Benign">Benign</option>
+              <option value="Suspicious">Suspicious</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="btn prev-btn" onclick="goToStep(3)">&larr; Back</button>
+          <button type="submit" class="btn submit-btn">Analyze & Predict Risk &check;</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Prediction Result Modal -->
+  {% if prediction_text %}
+  <div class="result-modal">
+    <div class="result-card {% if is_cancer == 1 %}danger{% else %}safe{% endif %}">
+      <h3>Analysis Result</h3>
+      <div class="status-pill">{{ prediction_text }}</div>
+      <p class="prob">{{ probability_text }}</p>
+      <a href="/" class="btn restart-btn">Run Another Assessment</a>
+    </div>
+  </div>
+  {% endif %}
+
+  <script>
+    const totalSteps = 5;
+    let currentStep = 0;
+    const track = document.querySelector('.slider-track');
+
+    function updateSlider() {
+      track.style.transform = `translateX(-${currentStep * 100}%)`;
+      const progressPercent = ((currentStep + 1) / totalSteps) * 100;
+      document.getElementById('progressBar').style.width = progressPercent + '%';
+      document.getElementById('stepIndicator').innerText = `Step ${currentStep + 1} of ${totalSteps}`;
+    }
+
+    function goToStep(stepIndex) {
+      if (stepIndex > currentStep) {
+        const cards = document.querySelectorAll('.slide-card');
+        const inputs = cards[currentStep].querySelectorAll('input, select');
+        for (let input of inputs) {
+          if (!input.checkValidity()) {
+            input.reportValidity();
+            return;
+          }
+        }
+      }
+      currentStep = stepIndex;
+      updateSlider();
+    }
+
+    updateSlider();
+  </script>
+</body>
+</html>
